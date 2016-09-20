@@ -36,9 +36,9 @@ This script requires `mysqldump` to be installed and executable from the PATH. T
 get_terminus_dump.sh
 -----------------
 
-This script utilizes Pantheon's preferred way of extracting off-site database backups. This script runs faster than `get_mysql_dump.sh` because it's running on the server cluster instead of over an SSH tunnel. The database are then retrieved from an Amazon S3 private bucket via `wget`. A 500MB database with 1200+ tables takes roughly ~1 minute to complete. 
+This script utilizes Pantheon's preferred way of extracting off-site database backups. This script runs faster than `get_mysql_dump.sh` because it's running on the server cluster instead of over an SSH tunnel. The database are then retrieved from an Amazon S3 private bucket via `wget`. A 500MB database with 1200+ tables takes roughly ~1 minute to complete.
 
 **Usage:**
 ```bash
-./get_mysql_dump.sh ~/Desktop
+./get_terminus_dump.sh ~/Desktop
 ```
