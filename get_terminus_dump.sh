@@ -1,34 +1,48 @@
 #!/bin/sh
 
-# check if terminus executable exists
-if [ ! -f ./terminus ]; then
-   ./install.sh
-fi
-
-# read environment variables from file
-export $(cat .env | xargs)
-
-# exit on any errors:
-set -e
-
-if [ $# -lt 1 ]
-then
-  echo "Usage: $0 <directory>"
-  echo "Example: $0 /Users/admin/Desktop"
-  exit 1
-fi
-
-# Create the Directory
-mkdir -p $1
+# Script Directory
+BASEDIR=$(dirname $BASH_SOURCE)
 
 # Create Filename
-FILE="$1/pantheon-$(date +"%Y%m%d-%H%M").sql.gz"
+FILE="$1/pantheon-$(date +"%H%M").sql.gz"
 
-# Terminus : Login
-./terminus auth login --machine-token=$AUTH > /dev/null 2>&1
+# Check if terminus executable exists
+if [ ! -f $BASEDIR/terminus ]; then
+   $BASEDIR/install.sh
+fi
 
-# Terminus : Create New DB Backup
-./terminus site backups create --element=db --site=$SITE --env=$ENV --keep-for=3
+# Read environment variables from file
+export $(cat $BASEDIR/.env | xargs)
 
-# Terminus : Get AWS S3 URL of last DB Dump
-./terminus site backups get --element=db --site=$SITE --env=$ENV --latest --to=$FILE
+if [ $# -lt 1 ]; then
+  echo "Usage: $BASH_SOURCE <directory>"
+  echo "Example: $BASH_SOURCE /Users/admin/Desktop"
+else
+
+  # Create the Directory
+  mkdir -p $1
+
+  # Terminus Command
+  if [ $BASEDIR = "." ]; then
+    CMD='./terminus'
+  else
+    CMD="$BASEDIR/terminus"
+  fi
+
+  # Terminus : Login
+  $CMD auth login --machine-token=$AUTH > /dev/null 2>&1
+
+  # Terminus : Create New DB Backup
+  $CMD site backups create --element=db --site=$SITE --env=$ENV --keep-for=3
+
+  # Remove file if it already exists
+  if [ "$OVERWRITE" = true ]; then
+    if [ -f $FILE ]; then
+        rm $FILE
+    fi
+  fi
+
+  # Terminus : Get AWS S3 URL of last DB Dump
+  $CMD site backups get --element=db --site=$SITE --env=$ENV --latest --to=$FILE
+
+fi

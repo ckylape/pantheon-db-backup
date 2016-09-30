@@ -20,6 +20,8 @@ The scripts look for a `.env` file with the following options (see example.env):
   - The site's short name (not the Site's UUID).
 - ENV
   - The environment you wish to backup. This will most likely be set to `dev`, `test`, or `live`, but the script will work with multi-dev environments as well.
+- OVERWRITE
+    - This will remove the file if it already exists before downloading. Terminus, by default, just throws an error if the file already exists. This only applys to the `get_terminus_dump.sh` script. The `get_mysql_dump.sh` will always overwrite the file if it exists.
 
 
 get_mysql_dump.sh
