@@ -7,7 +7,7 @@ BASEDIR=$(dirname $BASH_SOURCE)
 FILE="$1/pantheon-$(date +"%H%M").sql.gz"
 
 # Check if terminus executable exists
-if [ ! -f $BASEDIR/terminus ]; then
+if [ ! -f $BASEDIR/terminus/bin/terminus ]; then
    $BASEDIR/install.sh
 fi
 
@@ -24,9 +24,9 @@ else
 
   # Terminus Command
   if [ $BASEDIR = "." ]; then
-    CMD='./terminus'
+    CMD='./terminus/bin/terminus'
   else
-    CMD="$BASEDIR/terminus"
+    CMD="$BASEDIR/terminus/bin/terminus"
   fi
 
   # Terminus : Login

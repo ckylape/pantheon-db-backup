@@ -1,9 +1,8 @@
 #!/bin/sh
 
-BASEDIR=$(dirname $BASH_SOURCE)
-
-# Get the latest terminus.phar version from GitHub
-LATEST="$(curl -s https://api.github.com/repos/pantheon-systems/terminus/releases | grep browser_download_url | head -n 1 | cut -d '"' -f 4).phar"
+# Get the latest terminus repo clone from GitHub
+git clone https://github.com/pantheon-systems/terminus.git terminus
+cd terminus ; composer install
 
 # Install latest version Terminus with cURL
-curl $LATEST -L -o $BASEDIR/terminus && chmod +x $BASEDIR/terminus
+#curl $LATEST -L -o $BASEDIR/terminus && chmod +x $BASEDIR/terminus
