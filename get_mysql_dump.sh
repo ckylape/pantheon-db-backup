@@ -30,25 +30,25 @@ else
   fi
 
   # Terminus : Login
-  $CMD auth login --machine-token=$AUTH > /dev/null 2>&1
+  $CMD auth:login --machine-token $AUTH > /dev/null 2>&1
 
   # Terminus : Get Site ID
-  ID="$($CMD site info --site=$SITE --field=id)"
+  ID="$($CMD site:info --field=id $SITE )"
 
   # MySQL Host
   HOST="$ENV.$ID@dbserver.$ENV.$ID.drush.in"
 
   # Terminus : Get MySQL Port
-  PORT="$($CMD site connection-info --site=$SITE --env=$ENV --field=mysql_port)"
+  PORT="$($CMD connection:info --field=mysql_port $SITE.$ENV)"
 
   # Terminus : Get MySQL Password
-  PASS="$($CMD site connection-info --site=$SITE --env=$ENV --field=mysql_password)"
+  PASS="$($CMD connection:info --field=mysql_password $SITE.$ENV)"
 
   # SSH Tunnel to MySQL Server
   ssh -M -S my-ctrl-socket -f -N -L $PORT:localhost:$PORT -p 2222 $HOST
 
   # Dump MySQL Database
-  mysqldump pantheon -u pantheon -h 127.0.0.1 -P $PORT -p$PASS --single-transaction --quick | gzip > $FILE
+  /Applications/MySQLWorkbench.app/Contents/MacOS/mysqldump pantheon -u pantheon -h 127.0.0.1 -P $PORT -p$PASS --single-transaction --quick | gzip > $FILE
 
   # Close the SSH Tunnel
   ssh -S my-ctrl-socket -O exit $HOST

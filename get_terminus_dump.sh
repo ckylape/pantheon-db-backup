@@ -30,10 +30,10 @@ else
   fi
 
   # Terminus : Login
-  $CMD auth login --machine-token=$AUTH > /dev/null 2>&1
+  $CMD auth:login --machine-token $AUTH > /dev/null 2>&1
 
   # Terminus : Create New DB Backup
-  $CMD site backups create --element=db --site=$SITE --env=$ENV --keep-for=3
+  $CMD backup:create --element=db --keep-for=3 $SITE.$ENV
 
   # Remove file if it already exists
   if [ "$OVERWRITE" = true ]; then
@@ -43,6 +43,6 @@ else
   fi
 
   # Terminus : Get AWS S3 URL of last DB Dump
-  $CMD site backups get --element=db --site=$SITE --env=$ENV --latest --to=$FILE
+  $CMD backup:get --element=db --to=$FILE $SITE.$ENV
 
 fi
