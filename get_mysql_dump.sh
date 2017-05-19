@@ -53,4 +53,17 @@ else
   # Close the SSH Tunnel
   ssh -S my-ctrl-socket -O exit $HOST
 
+  # Optionally Send Slack Webhook
+  if [ ! -z "$WEBHOOK" ]; then
+    JSON='{
+      "attachments": [{
+        "fallback": "Pantheon DB Backup - Terminus Dump",
+        "color": "#36a64f",
+        "pretext": "Pantheon DB Backup",
+        "text": "Backup succesfully created for database: '$SITE.$ENV'"
+      }]
+    }'
+    curl -X POST -H 'Content-type: application/json' --data "$JSON" $WEBHOOK
+  fi
+
 fi

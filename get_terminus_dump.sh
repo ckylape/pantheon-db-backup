@@ -45,4 +45,17 @@ else
   # Terminus : Get AWS S3 URL of last DB Dump
   $CMD backup:get --element=db --to=$FILE $SITE.$ENV
 
+  # Optionally Send Slack Webhook
+  if [ ! -z "$WEBHOOK" ]; then
+    JSON='{
+      "attachments": [{
+        "fallback": "Pantheon DB Backup - Terminus Dump",
+        "color": "#36a64f",
+        "pretext": "Pantheon DB Backup",
+        "text": "Backup succesfully created for database: '$SITE.$ENV'"
+      }]
+    }'
+    curl -X POST -H 'Content-type: application/json' --data "$JSON" $WEBHOOK
+  fi
+
 fi
